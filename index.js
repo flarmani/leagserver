@@ -121,17 +121,20 @@ app.get("/", (req, res) => {
   res.send("League Patch Proxy is live!");
 });
 
-app.get("/champions/:id", async (req, res) => {
-  const { id } = req.params;
-  const { version = "14.10.1", lang = "en_US" } = req.query;
-
-  const url = `${BASE}/cdn/${version}/data/${lang}/champion/${id}.json`;
+app.get('/champions/:id', async (req, res) => {
+  const id = req.params.id;
+  const version = req.query.version || '14.10.1';
+  const lang = req.query.lang || 'en_US';
+  
+  const url = `https://ddragon.leagueoflegends.com/cdn/${version}/data/${lang}/champion/${id}.json`;
 
   try {
     const response = await axios.get(url);
-    res.json(response.data);
-  } catch (err) {
-    res.status(404).json({ error: `Champion ${id} not found for version ${version}` });
+    // Return only the champion data, not the whole file
+    res.json(response.data.data[id]);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: 'Champion not found or failed to retrieve.' });
   }
 });
 
