@@ -124,3 +124,16 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Proxy server running on port ${PORT}`);
 });
+app.get("/champions/:id", async (req, res) => {
+  const { id } = req.params;
+  const { version = "14.10.1", lang = "en_US" } = req.query;
+
+  const url = `${BASE}/cdn/${version}/data/${lang}/champion/${id}.json`;
+
+  try {
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch (err) {
+    res.status(404).json({ error: `Champion ${id} not found for version ${version}` });
+  }
+});
