@@ -121,9 +121,6 @@ app.get("/", (req, res) => {
   res.send("League Patch Proxy is live!");
 });
 
-app.listen(PORT, () => {
-  console.log(`Proxy server running on port ${PORT}`);
-});
 app.get("/champions/:id", async (req, res) => {
   const { id } = req.params;
   const { version = "14.10.1", lang = "en_US" } = req.query;
@@ -137,3 +134,9 @@ app.get("/champions/:id", async (req, res) => {
     res.status(404).json({ error: `Champion ${id} not found for version ${version}` });
   }
 });
+
+app.listen(PORT, () => {
+  console.log(`Proxy server running on port ${PORT}`);
+});
+
+
